@@ -1,7 +1,10 @@
 import math
 import cv2
 import cvzone
+import numpy as np
 from ultralytics import YOLO
+from sort import *
+
 
 classNames = ["person", "bicycle", "car", "motorbike", "aeroplane", "bus", "train", "truck", "boat",
               "traffic light", "fire hydrant", "stop sign", "parking meter", "bench", "bird", "cat",
@@ -17,9 +20,17 @@ classNames = ["person", "bicycle", "car", "motorbike", "aeroplane", "bus", "trai
 
 cap = cv2.VideoCapture('./data_set/cars.mp4')
 model = YOLO('./yolov8l.pt')
+mask = cv2.imread('./mask.png')
+
+# tracking
+track = Sort(max_age=20, min_hits=3, iou_threshold=0.3)
+limits = [400, 297, 673, 297]
+
 while True:
     ret, frame = cap.read()
-    res = model(frame, stream=True)
+    imgRegion = cv2.bitwise_and(frame, mask)
+    res = model(imgRegion, stream=True)
+    detections = np.empty((0, 5))
     for r in res:
         boxes = r.boxes
         for box in boxes:
@@ -30,9 +41,21 @@ while True:
             name = int(box.cls[0])
             current_class = classNames[name]
 
-            if current_class == 'car' or current_class == 'motorbike'\
-                    or current_class == 'bus' or current_class == 'truck' and conf > 0.25:
-                cvzone.putTextRect(frame, f'{conf}{classNames[name]}', (max(20, x1), max(0, y1)), scale=1, thickness=1)
-                cvzone.cornerRect(frame, (x1, y1, w, h))
+            if current_class in ['car', 'motorbike', 'bus', 'truck'] and conf > 0.25:
+                # cvzone.putTextRect(frame, f'{conf}{classNames[name]}', (max(20, x1), max(0, y1)), scale=1,
+                # thickness=1)
+                # cvzone.cornerRect(frame, (x1, y1, w, h))
+                currentArray = np.array([x1, y1, x2, y2, conf])
+                detections = np.vstack((detections, currentArray))
+
+    results_tracker = track.update(detections)
+    cv2.line(frame, (limits[0], limits[1]), (limits[2], limits[3]), (0, 255, 0), 5)
+    for res in results_tracker:
+        x1, y1, x2, y2, id = map(int, res)
+        w, h = x2-x1, y2-y1
+        print(res)
+        cvzone.cornerRect(frame, (x1, y1, w, h), l=9, rt=5, colorR=(255, 0, 255))
+        cvzone.putTextRect(frame, f'{int(id)}', (max(20, x1), max(0, y1)), scale=1, thickness=1)
+
     cv2.imshow('Car', frame)
     cv2.waitKey(0)
