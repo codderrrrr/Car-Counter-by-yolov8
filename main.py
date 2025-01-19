@@ -25,7 +25,7 @@ mask = cv2.imread('./mask.png')
 # tracking
 track = Sort(max_age=20, min_hits=3, iou_threshold=0.3)
 limits = [400, 297, 673, 297]
-totalCount = 0
+totalCount = []
 while True:
     ret, frame = cap.read()
     imgRegion = cv2.bitwise_and(frame, mask)
@@ -60,9 +60,11 @@ while True:
         cx, cy = x1+w//2, y1+h//2
         cv2.circle(frame, (cx,cy), 5, (255, 0, 255), cv2.FILLED)
 
-        if limits[0] < cx < limits[2] and limits[1]-20 < cy < limits[1]+20:
-            totalCount += 1
-        cvzone.putTextRect(frame, f' Count: {totalCount}', (50, 50))
+        if limits[0] < cx < limits[2] and limits[1]-30 < cy < limits[1]+30:
+            if totalCount.count(id) == 0:
+                totalCount.append(id)
+                cv2.line(frame, (limits[0], limits[1]), (limits[2], limits[3]), (0, 0, 255), 5)
+        cvzone.putTextRect(frame, f' Count: {len(totalCount)}', (50, 50))
 
     cv2.imshow('Car', frame)
     cv2.waitKey(0)
