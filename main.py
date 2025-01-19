@@ -29,6 +29,8 @@ totalCount = []
 while True:
     ret, frame = cap.read()
     imgRegion = cv2.bitwise_and(frame, mask)
+    imgGraphics = cv2.imread('./data_set/graphics.png', cv2.IMREAD_UNCHANGED)
+    frame = cvzone.overlayPNG(frame, imgGraphics, (0, 0))
     res = model(imgRegion, stream=True)
     detections = np.empty((0, 5))
     for r in res:
@@ -64,7 +66,8 @@ while True:
             if totalCount.count(id) == 0:
                 totalCount.append(id)
                 cv2.line(frame, (limits[0], limits[1]), (limits[2], limits[3]), (0, 0, 255), 5)
-        cvzone.putTextRect(frame, f' Count: {len(totalCount)}', (50, 50))
+        cv2.putText(frame, str(len(totalCount)), (255, 100), cv2.FONT_HERSHEY_DUPLEX, 3,
+                    (50, 50, 50), 8)
 
     cv2.imshow('Car', frame)
-    cv2.waitKey(0)
+    cv2.waitKey(1)
