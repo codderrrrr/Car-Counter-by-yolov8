@@ -52,7 +52,7 @@ Press the q key to stop the video during playback.
 # Files in the Repository
 main.py: The main script that performs vehicle counting.
 
-mask.png: A binary mask image for defining the region of interest.
+mask.png: A binary mask image for defining the region of interest( create according to video need).
 
 graphics.png: A graphic overlay added to the video(not included).
 
