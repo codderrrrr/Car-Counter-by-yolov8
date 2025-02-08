@@ -29,7 +29,7 @@ SORT library
 
 Clone the repository:
 
-git clone <repository_url>
+git clone <https://github.com/codderrrrr/Car-Counter-by-yolov8.git>
 
 cd car-counter
 
@@ -89,7 +89,12 @@ Integrate with a database for storing vehicle counts.
 Improve performance for high-resolution videos.
 
 # License
-This project is open-source and available under the .
+## License
+
+This project is licensed under the [GNU General Public License v3.0](https://www.gnu.org/licenses/gpl-3.0.html).
+
+You are free to use, modify, and distribute this software, but any derivative work must also be licensed under GPL-3.0. For more details, see the [LICENSE](LICENSE) file.
+
 
 For any queries, feel free to reach out through GitHub Issues.
 
