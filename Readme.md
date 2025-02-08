@@ -44,6 +44,8 @@ Place the video file (e.g., traffic_video.mp4) in the project folder (data_set).
 
 Create a mask if needed otherwise comment out the lines or use white pic as a mask.
 
+Change limits according to your need.
+
 Run the main script:  
 python main.py
 
