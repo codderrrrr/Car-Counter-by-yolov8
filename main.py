@@ -28,8 +28,15 @@ limits = [400, 297, 673, 297]
 totalCount = []
 while True:
     ret, frame = cap.read()
+    if not ret:
+      break
+    frame = cv2.resize(frame, (720, 540))  # Resize to any desired size
+    mask = cv2.resize(mask, (frame.shape[1], frame.shape[0]))  # Resize mask to same size as frame
+    if len(mask.shape) == 2:
+        mask = cv2.cvtColor(mask, cv2.COLOR_GRAY2BGR)
     imgRegion = cv2.bitwise_and(frame, mask)
     imgGraphics = cv2.imread('./data_set/graphics.png', cv2.IMREAD_UNCHANGED)
+    imgGraphics = cv2.resize(imgGraphics, (100, 100))
     frame = cvzone.overlayPNG(frame, imgGraphics, (0, 0))
     res = model(imgRegion, stream=True)
     detections = np.empty((0, 5))
@@ -44,9 +51,6 @@ while True:
             current_class = classNames[name]
 
             if current_class in ['car', 'motorbike', 'bus', 'truck'] and conf > 0.25:
-                # cvzone.putTextRect(frame, f'{conf}{classNames[name]}', (max(20, x1), max(0, y1)), scale=1,
-                # thickness=1)
-                # cvzone.cornerRect(frame, (x1, y1, w, h))
                 currentArray = np.array([x1, y1, x2, y2, conf])
                 detections = np.vstack((detections, currentArray))
 
@@ -70,4 +74,8 @@ while True:
                     (50, 50, 50), 8)
 
     cv2.imshow('Car', frame)
-    cv2.waitKey(1)
+    if cv2.waitKey(1) & 0xFF == ord('q'):
+        print("Stopping the video...")
+        break
+cap.release()
+cv2.destroyAllWindows()
