@@ -40,21 +40,23 @@ pip install -r requirements.txt
 Download the YOLO model weights (e.g., yolov8l.pt) and place them in the project directory.
 
 # Usage
-Place the video file (e.g., traffic_video.mp4) in the project folder.
+Place the video file (e.g., traffic_video.mp4) in the project folder (data_set).
+
+Create a mask if needed otherwise comment out the lines or use white pic as a mask.
 
 Run the main script:  
 python main.py
 
 Press the q key to stop the video during playback.
 
-Files in the Repository
+# Files in the Repository
 main.py: The main script that performs vehicle counting.
 
 mask.png: A binary mask image for defining the region of interest.
 
 graphics.png: A graphic overlay added to the video(not included).
 
-traffic_video.mp4: Example video file for testing.
+traffic_video.mp4: Example video file for testing(not included but can be downloaded by https://www.pexels.com/video/traffic-flow-in-the-highway-2103099/.
 
 yolov8l.pt: YOLOv8 model weights (not included, must be downloaded separately).
 
@@ -89,7 +91,6 @@ Integrate with a database for storing vehicle counts.
 Improve performance for high-resolution videos.
 
 # License
-## License
 
 This project is licensed under the [GNU General Public License v3.0](https://www.gnu.org/licenses/gpl-3.0.html).
 
